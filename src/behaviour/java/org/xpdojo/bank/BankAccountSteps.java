@@ -15,7 +15,7 @@ public class BankAccountSteps {
     public void a_user_has_an_existing_bank_account() {        
         // Initialize the account with a default balance of 0
       //        account = BankAccountPrototype.cloneBaseAccount();
-  account =  anAccount().withBalance(amountOf(0)).build(); 
+      account =  anAccount().withBalance(amountOf(0)).build(); 
     }
 
     @When("the user deposits ${int}")

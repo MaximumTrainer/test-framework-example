@@ -9,9 +9,11 @@
 - DSL (Domain-Specific Language) Driver – To encapsulate actions in a readable way.
 - Page Object Pattern – To structure UI interactions.
 
+[Other Unit Test Pattern Examples](testPatterns.md)
+
 
 # Project Structure
-
+```
 atdd-bank-test-framework/
 │── src/
 │   ├── main/
@@ -41,7 +43,7 @@ atdd-bank-test-framework/
 │   │   │   ├── specifications/             # Concordion specification files
 │── pom.xml (Maven dependencies)
 │── wdio.conf.js (WebdriverIO config)
-│── cucumber.properties (Cucumber configuration)
+```
 
 # About Cucumber & Concordion 
 

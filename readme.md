@@ -10,6 +10,7 @@
 - Page Object Pattern – To structure UI interactions.
 
 [Other Unit Test Pattern Examples](testPatterns.md)
+[Pattern sumary from the book Growing Object-Oriented Software Guided by Tests](goosPatterns.md)
 
 
 # Project Structure
@@ -32,13 +33,13 @@ atdd-bank-test-framework/
 │   │   ├── resources/
 │   ├── behaviour/
 │   │   ├── java/
-│   │   │   ├── org.xpdojo.bank/       # Cucumber Behaviour Test scenarios
+│   │   │   ├── org.xpdojo.bank/            # Cucumber Behaviour Test scenarios
 │   │   ├── resources/
 │   │   │   ├── features/                   # Cucumber feature files
 │   ├── webdriverio/                        # WebdriverIO setup for UI automation
 │   ├── specifications/
 │   │   ├── java/
-│   │   │   ├── org.xpdojo.bank/  # Concordion specification scenarios
+│   │   │   ├── org.xpdojo.bank/            # Concordion specification scenarios
 │   │   ├── resources/
 │   │   │   ├── specifications/             # Concordion specification files
 │── pom.xml (Maven dependencies)
@@ -108,40 +109,49 @@ Imagine testing a system that deals with user profiles. Instead of repeatedly wr
 
 #### **Example**
 ```java
-public class User {
-    private String name;
-    private int age;
-    private String email;
+public class Account {
+    private String accountNumber;
+    private Money balance;
+    private Statement statement;
 
-    private User(UserBuilder builder) {
-        this.name = builder.name;
-        this.age = builder.age;
-        this.email = builder.email;
+    private Account(AccountBuilder builder) {
+        this.accountNumber = builder.accountNumber;
+        this.balance = builder.balance;
+        this.statement = builder.statement;
     }
 
-    public static class UserBuilder {
-        private String name;
-        private int age;
-        private String email;
+    public static class AccountBuilder {
+        private String accountNumber;
+        private Money balance = Money.amountOf(0); // Default balance
+        private Statement statement = new Statement(); // Default empty statement
 
-        public UserBuilder withName(String name) {
-            this.name = name;
+        public AccountBuilder withAccountNumber(String accountNumber) {
+            this.accountNumber = accountNumber;
             return this;
         }
 
-        public UserBuilder withAge(int age) {
-            this.age = age;
+        public AccountBuilder withBalance(Money balance) {
+            this.balance = balance;
             return this;
         }
 
-        public UserBuilder withEmail(String email) {
-            this.email = email;
+        public AccountBuilder withStatement(Statement statement) {
+            this.statement = statement;
             return this;
         }
 
-        public User build() {
-            return new User(this);
+        public Account build() {
+            return new Account(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", balance=" + balance +
+                ", statement=" + statement +
+                '}';
     }
 }
 ```
@@ -226,67 +236,41 @@ Sure! Let's combine the **Builder** and **Prototype** patterns in a domain-speci
 
 ---
 
-### **Step 1: Create the `UserProfile` Class with Prototype**
+### **Step 1: Create the `Account` Class with Prototype**
 This class represents a user profile that can be cloned.
 
 ```java
-public class UserProfile implements Cloneable {
-    private String name;
-    private int age;
-    private String email;
-    private String role;
+public class Account implements Cloneable {
+    private String accountNumber;
+    private Money balance;
+    private Statement statement;
 
-    private UserProfile(UserProfileBuilder builder) {
-        this.name = builder.name;
-        this.age = builder.age;
-        this.email = builder.email;
-        this.role = builder.role;
+    public Account(String accountNumber, Money balance, Statement statement) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.statement = statement;
     }
 
-    public static class UserProfileBuilder {
-        private String name;
-        private int age;
-        private String email;
-        private String role;
-
-        public UserProfileBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public UserProfileBuilder withAge(int age) {
-            this.age = age;
-            return this;
-        }
-
-        public UserProfileBuilder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public UserProfileBuilder withRole(String role) {
-            this.role = role;
-            return this;
-        }
-
-        public UserProfile build() {
-            return new UserProfile(this);
-        }
-    }
-
-    // Prototype pattern: cloning method
-    @Override
-    public UserProfile clone() {
+    public Account clone() {
         try {
-            return (UserProfile) super.clone();
+            return (Account) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("Cloning failed", e);
         }
     }
 
+    public void deposit(Money amount) {
+        this.balance = this.balance.add(amount);
+        this.statement.addTransaction(new Transaction("Deposit", amount));
+    }
+
     @Override
     public String toString() {
-        return "UserProfile{name='" + name + "', age=" + age + ", email='" + email + "', role='" + role + "'}";
+        return "Account{" +
+                "accountNumber='" + accountNumber + '\'' +
+                ", balance=" + balance +
+                ", statement=" + statement +
+                '}';
     }
 }
 ```
@@ -297,22 +281,18 @@ public class UserProfile implements Cloneable {
 We use the **Builder** to construct different test profiles.
 
 ```java
-UserProfile adminUser = new UserProfile.UserProfileBuilder()
-    .withName("Admin User")
-    .withAge(40)
-    .withEmail("admin@example.com")
-    .withRole("Admin")
+Account testAccount1 = new Account.AccountBuilder()
+    .withAccountNumber("12345")
+    .withBalance(Money.amountOf(1000))
     .build();
 
-UserProfile normalUser = new UserProfile.UserProfileBuilder()
-    .withName("John Doe")
-    .withAge(25)
-    .withEmail("john@example.com")
-    .withRole("User")
+Account testAccount2 = new Account.AccountBuilder()
+    .withAccountNumber("67890")
+    .withBalance(Money.amountOf(2000))
     .build();
 
-System.out.println(adminUser);
-System.out.println(normalUser);
+System.out.println(testAccount1);
+System.out.println(testAccount2);
 ```
 
 ---
@@ -321,24 +301,15 @@ System.out.println(normalUser);
 Instead of creating new profiles from scratch, we can **clone** a base profile and modify it.
 
 ```java
-// Prototype: Clone a standard user and modify it
-UserProfile baseUser = new UserProfile.UserProfileBuilder()
-    .withName("Base User")
-    .withAge(30)
-    .withEmail("base@example.com")
-    .withRole("User")
-    .build();
+// Prototype: Clone a base account and modify it
+Account baseAccount = new Account("12345", Money.amountOf(1000), new Statement());
 
-// Clone the base user and customize for a new user
-UserProfile clonedUser = baseUser.clone();
-clonedUser = new UserProfile.UserProfileBuilder()
-    .withName("Alice Clone")
-    .withAge(clonedUser.clone().age)  // Keep the same age
-    .withEmail("alice@example.com")
-    .withRole("Premium User")  // Upgrade the role
-    .build();
+// Clone the base account and customize for a new user
+Account clonedAccount = baseAccount.clone();
+clonedAccount.deposit(Money.amountOf(500));
 
-System.out.println(clonedUser);
+System.out.println("Base Account: " + baseAccount);
+System.out.println("Cloned Account: " + clonedAccount);
 ```
 
 ---

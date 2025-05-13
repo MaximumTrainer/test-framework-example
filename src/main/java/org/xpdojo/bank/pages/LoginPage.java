@@ -16,7 +16,7 @@
  */
 
 
-package org.xpdojo.pages;
+package org.xpdojo.bank.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

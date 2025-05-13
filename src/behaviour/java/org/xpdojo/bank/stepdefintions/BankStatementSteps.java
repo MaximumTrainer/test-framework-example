@@ -20,9 +20,8 @@ package org.xpdojo.bank.stepdefintions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.xpdojo.pages.LoginPage;
-import org.xpdojo.pages.StatementPage;
+import org.xpdojo.bank.pages.LoginPage;
+import org.xpdojo.bank.pages.StatementPage;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;

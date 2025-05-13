@@ -1,8 +1,8 @@
 package org.xpdojo.bank.dsl;
 
 import org.openqa.selenium.WebDriver;
-import org.xpdojo.pages.LoginPage;
-import org.xpdojo.pages.StatementPage;
+import org.xpdojo.bank.pages.LoginPage;
+import org.xpdojo.bank.pages.StatementPage;
 
 public class BankActions {
     private WebDriver driver;

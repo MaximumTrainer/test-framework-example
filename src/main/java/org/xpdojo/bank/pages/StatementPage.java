@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.xpdojo.pages;
+package org.xpdojo.bank.pages;
 
 import org.xpdojo.bank.Statement;
 import org.xpdojo.bank.Transaction;

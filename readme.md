@@ -20,8 +20,6 @@ atdd-bank-test-framework/
 │   ├── main/
 │   │   ├── java/
 │   │   │   ├── org.xpdojo.bank/
-│   │   │   │   ├── dsl/                    # DSL for interacting with the system
-│   │   │   │   ├── pages/                  # Page Object Model implementation
 │   │   │   │   ├── patterns/
 │   │   │   │   │   ├── builder/            # Builder pattern for test data
 │   │   │   │   │   ├── prototype/          # Prototype pattern for cloning test data
@@ -34,6 +32,8 @@ atdd-bank-test-framework/
 │   ├── behaviour/
 │   │   ├── java/
 │   │   │   ├── org.xpdojo.bank/            # Cucumber Behaviour Test scenarios
+│   │   │   │   ├── dsl/                    # DSL for interacting with the system
+│   │   │   │   ├── pages/                  # Page Object Model implementation
 │   │   ├── resources/
 │   │   │   ├── features/                   # Cucumber feature files
 │   ├── webdriverio/                        # WebdriverIO setup for UI automation

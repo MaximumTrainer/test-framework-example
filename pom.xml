@@ -121,30 +121,6 @@
                 </configuration>
             </plugin>
 
-            <!-- fix cucumber & concordion execution https://stackoverflow.com/questions/18164579/how-do-i-specify-a-separate-maven-goal-for-running-cucumber-acceptance-tests -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.9.1</version>
-                <executions>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/behaviour/java</source> <!-- Cucumber tests -->
-                                <source>src/behaviour/resources</source> <!-- Cucumber tests -->
-                                <source>src/specifications/java</source> <!-- Concordion tests -->
-                                <source>src/specifications/resources</source> <!-- Concordion tests -->
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- PIT mutation testing -->
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -172,6 +148,27 @@
             <id>behaviour-tests</id>
             <build>
                 <plugins>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>add-test-source</id>
+                                <phase>generate-test-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/behaviour/java</source> <!-- Cucumber tests -->
+                                        <source>src/behaviour/resources</source> <!-- Cucumber tests -->
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <!-- to run directly: mvn failsafe:integration-test -P behaviour-tests -->
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -203,6 +200,26 @@
             <id>specification-tests</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>add-test-source</id>
+                                <phase>generate-test-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/specifications/java</source> <!-- Concordion tests -->
+                                        <source>src/specifications/resources</source> <!-- Concordion tests -->
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <!-- to run directly: mvn failsafe:integration-test -P specification-tests -->
                         <artifactId>maven-failsafe-plugin</artifactId>

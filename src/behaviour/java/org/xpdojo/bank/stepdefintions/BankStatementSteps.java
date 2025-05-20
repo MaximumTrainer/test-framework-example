@@ -19,7 +19,10 @@
 package org.xpdojo.bank.stepdefintions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xpdojo.bank.pages.LoginPage;
 import org.xpdojo.bank.pages.StatementPage;
 
@@ -30,29 +33,37 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import static org.junit.Assert.*;
 
+import java.time.Duration;
+
 public class BankStatementSteps {
     private WebDriver driver;
     private LoginPage loginPage;
     private StatementPage statementPage;
-    
-    @Before
+      @Before
     public void setup() {
+        WebDriverManager.chromedriver().setup();
         driver = WebDriverManager.chromedriver().create();
+        driver.manage().window().maximize();
     }
     
     @After
     public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
         WebDriverManager.chromedriver().quit();
     }
     
     @Given("I am on the bank login page")
     public void i_am_on_the_bank_login_page() {
-        driver.get("file:///" + System.getProperty("user.dir") + "/src/main/resources/webapp/login.html");
+        driver.get("http://localhost:8080/login.html");
         loginPage = new LoginPage(driver);
+        // Verify we're on the login page
+        assertTrue("Login page should be displayed", 
+            driver.getTitle().contains("Bank Login"));
         assertTrue(loginPage.isDisplayed());
     }
-    
-    @When("I enter username {string} and password {string}")
+      @When("I enter username {string} and password {string}")
     public void i_enter_username_and_password(String username, String password) {
         loginPage.enterUsername(username);
         loginPage.enterPassword(password);
@@ -63,20 +74,31 @@ public class BankStatementSteps {
         loginPage.clickLogin();
     }
     
-    /*
-     Then("I should be redirected to the bank statement page")
+    @Then("I should be redirected to the bank statement page")
     public void i_should_be_redirected_to_the_bank_statement_page() {
+        // Wait for redirect and page load
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+            .until(ExpectedConditions.urlContains("statement.html"));
+            
         statementPage = new StatementPage(driver);
-        assertTrue(statementPage.isDisplayed());
+        assertTrue("Statement page should be displayed", statementPage.isDisplayed());
     }
     
     @Then("I should see {int} transactions in the statement")
     public void i_should_see_transactions_in_the_statement(int expectedCount) {
-        assertEquals(expectedCount, statementPage.getTransactionCount());
+        assertEquals("Number of transactions should match", 
+            expectedCount, statementPage.getTransactionCount());
     }
-    */
+    
     @Then("I should see an error message")
     public void i_should_see_an_error_message() {
-        assertFalse(loginPage.getErrorMessage().isEmpty());
+        // Wait for error message to appear due to AJAX response
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+            .until(ExpectedConditions.visibilityOfElementLocated(By.id("errorMessage")));
+            
+        String errorMsg = loginPage.getErrorMessage();
+        assertFalse("Error message should not be empty", errorMsg.isEmpty());
+        assertTrue("Error message should indicate login failure", 
+            errorMsg.contains("Invalid credentials") || errorMsg.contains("Login failed"));
     }
 }

@@ -1,9 +1,10 @@
 # About This Project
 
+In this example project we use junit, cucumber & concordion to demonstrate the testing pyramid. In this example cucumber is used with Selenium simply to demonstrate brekaing out into UI tests.
 
 # Frameworks & Example Patterns
 - Cucumber – For BDD-style test definitions.
-- WebdriverIO – For UI automation.
+- Selenium – For UI automation.
 - Builder Pattern – For creating test data objects cleanly.
 - Prototype Pattern – For cloning reusable test data.
 - DSL (Domain-Specific Language) Driver – To encapsulate actions in a readable way.
@@ -24,7 +25,6 @@ atdd-bank-test-framework/
 │   │   │   │   │   ├── builder/            # Builder pattern for test data
 │   │   │   │   │   ├── prototype/          # Prototype pattern for cloning test data
 │   │   │   │   ├── utilities/              # Common utilities for tests
-│   │   │   │   ├── webdrivers/             # WebDriver configuration
 │   ├── test/
 │   │   ├── java/
 │   │   │   ├── org.xpdojo.bank/           # Test scenarios
@@ -36,15 +36,23 @@ atdd-bank-test-framework/
 │   │   │   │   ├── pages/                  # Page Object Model implementation
 │   │   ├── resources/
 │   │   │   ├── features/                   # Cucumber feature files
-│   ├── webdriverio/                        # WebdriverIO setup for UI automation
 │   ├── specifications/
 │   │   ├── java/
 │   │   │   ├── org.xpdojo.bank/            # Concordion specification scenarios
 │   │   ├── resources/
 │   │   │   ├── specifications/             # Concordion specification files
 │── pom.xml (Maven dependencies)
-│── wdio.conf.js (WebdriverIO config)
 ```
+
+# Running the tests
+This is a maven based project, meaning the project details & dependencies are contained within pom.xml
+- to run the unit tests from the command line execute 
+`mvn clean install`
+- to run the cucumber tests from the command line execute 
+`mvn clean verify -P behaviour-tests`
+- to run the concordion tests from the command line execute 
+`mvn install verify -P specification-tests`
+
 
 # About Cucumber & Concordion 
 

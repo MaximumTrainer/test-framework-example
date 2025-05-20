@@ -1,9 +1,0 @@
-package org.xpdojo.bank.patterns.prototype;
-
-public class BankAccountPrototype {
-    private static final BankAccount baseAccount = new BankAccount("12345", 1000.00);
-
-    public static BankAccount cloneBaseAccount() {
-        return new BankAccount(baseAccount.getAccountNumber(), baseAccount.getBalance());
-    }
-}

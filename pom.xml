@@ -71,6 +71,20 @@
             <!-- <scope>test</scope> in a real project this would be under test scope as would the test classes that require this -->
         </dependency>
 
+        <!-- Jakarta Servlet API -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Gson for JSON processing -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
 
         <!-- WebDriverIO (via JavaScript, assumed to be installed separately) -->
 
@@ -148,7 +162,39 @@
             <id>behaviour-tests</id>
             <build>
                 <plugins>
-
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <version>11.0.20</version>
+                        <configuration>
+                            <httpConnector>
+                                <port>8080</port>
+                            </httpConnector>
+                            <stopKey>STOP</stopKey>
+                            <stopPort>9999</stopPort>
+                            <webApp>
+                                <contextPath>/</contextPath>
+                                <resourceBase>${project.basedir}/src/main/webapp</resourceBase>
+                            </webApp>
+                            <supportedPackagings><packaging>jar</packaging></supportedPackagings>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-jetty</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-jetty</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>build-helper-maven-plugin</artifactId>

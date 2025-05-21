@@ -11,6 +11,7 @@ In this example project we use junit, cucumber & concordion to demonstrate the t
 - Page Object Pattern – To structure UI interactions.
 
 [Other Unit Test Pattern Examples](testPatterns.md)
+
 [Pattern sumary from the book Growing Object-Oriented Software Guided by Tests](goosPatterns.md)
 
 
